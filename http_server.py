@@ -1,8 +1,9 @@
 import socket
-import sys
 import traceback
 import os
+import sys
 import mimetypes
+from subprocess import Popen, PIPE
 
 def response_ok(body=b"This is a minimal response", mimetype=b"text/plain"):
     """
@@ -24,6 +25,7 @@ def response_ok(body=b"This is a minimal response", mimetype=b"text/plain"):
     # TODO: Implement response_ok
     if isinstance(body, list):
         body = str(body).encode()
+
     return b"\r\n".join([b"HTTP/1.1 200 OK"
 
                         b"Content-Type: " + mimetype,
@@ -114,8 +116,13 @@ def response_path(path):
             mime_type = b"text/plain"
         else:
             mime_type = mimetypes.guess_type(filepath)[0].encode()
-            with open(filepath, "rb") as file:
-                content = file.read()
+            if mime_type == b"text/x-python":
+                content = Popen(filepath, stdout=PIPE)
+                content = content.communicate()[0]
+                mime_type = b"test/html"
+            else:
+                with open(filepath, "rb") as file:
+                    content = file.read()
 
 
     # under webroot.
