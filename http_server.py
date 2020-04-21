@@ -26,7 +26,7 @@ def response_ok(body=b"This is a minimal response", mimetype=b"text/plain"):
     if isinstance(body, list):
         body = str(body).encode()
 
-    return b"\r\n".join([b"HTTP/1.1 200 OK"
+    return b"\r\n".join([b"HTTP/1.1 200 OK",
 
                         b"Content-Type: " + mimetype,
 
